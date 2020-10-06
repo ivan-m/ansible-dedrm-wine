@@ -1,0 +1,14 @@
+---
+
+- hosts: localhost
+
+  any_errors_fatal: true
+
+  vars_files:
+    - configuration.yml
+
+  tasks:
+    - name: Ensure wine prefix doesn't exist
+      file:
+        path: "{{ wine_prefix }}"
+        state: absent

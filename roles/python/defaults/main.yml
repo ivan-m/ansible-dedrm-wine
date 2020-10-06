@@ -1,0 +1,20 @@
+---
+
+python_version: "2.7.13"
+pycrypto_version: "2.6.1"
+
+# For uninstallation/retry purposes it's best if these are in wine_prefix
+python_installer_location: "{{ wine_prefix }}/python-{{ python_version }}.msi"
+pycrypto_installer_location: "{{ wine_prefix }}/pycrypto-{{ pycrypto_version }}.msi"
+
+# e.g. 2.7.13 => 2.7
+python_major_version: "{{ python_version | regex_replace('^(.\\.[^\\.]+).*$', '\\1') }}"
+
+# e.g. 2.7 => 27
+python_simple_version: "{{ python_major_version | regex_replace('\\.', '') }}"
+pycrypto_simple_version: "{{ pycrypto_version | regex_replace('\\.', '') }}"
+
+# These assume that the defaults aren't changed in the two installers.
+python_exe: "C:\\Python{{ python_simple_version }}\\python.exe"
+python_install_dir: "Python{{ python_simple_version }}/"
+pycrypto_install_dir: "Lib/site-packages/pycrypto-{{ pycrypto_version }}-py{{ python_major_version }}.egg-info/"

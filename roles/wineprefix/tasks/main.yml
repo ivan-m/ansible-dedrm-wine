@@ -1,0 +1,29 @@
+---
+
+- name: Check if wine prefix already exists
+  stat:
+    path: "{{ wine_prefix }}"
+  register: wine_prefix_stat
+
+- name: Prefix already exists
+  debug:
+    msg: "{{ wine_prefix }} already exists"
+  when:
+    - wine_prefix_stat.stat.isdir is defined
+    - wine_prefix_stat.stat.isdir
+
+- name: "Create wine prefix {{ wine_prefix }}"
+  command:
+    cmd: wine wineboot --init
+    creates: "{{ wine_prefix }}"
+      # This duplicates the when conditional check
+  when: wine_prefix_stat.stat.isdir is not defined or not wine_prefix_stat.stat.isdir
+
+- name: "Find out what is installed already with winetricks"
+  command:
+    winetricks --unattended list-installed
+  register: winetricks_installed
+
+- name: Clean up installed list
+  set_fact:
+    winetricks_installed: "{{ winetricks_installed.stdout }}"

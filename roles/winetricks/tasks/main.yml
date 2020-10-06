@@ -1,0 +1,11 @@
+---
+
+- name: Package is already installed
+  debug:
+    msg: "{{ package_name }} is already installed in {{ wine_prefix }}"
+  when: package_name is in winetricks_installed
+
+- name: "Installing {{ package_name }}"
+  command:
+    winetricks --unattended --force {{ package_name }}
+  when: package_name not in winetricks_installed

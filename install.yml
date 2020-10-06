@@ -1,0 +1,45 @@
+---
+
+- hosts: localhost
+
+  any_errors_fatal: true
+
+  vars_files:
+    - configuration.yml
+
+  environment:
+    WINEPREFIX: "{{ wine_prefix }}"
+    WINEARCH: "win{{ wine_architecture }}"
+    # Disables menu entries and mimeconfig; TODO: make this
+    # configurable
+    #
+    # https://wiki.winehq.org/FAQ#How_can_I_prevent_Wine_from_changing_the_filetype_associations_on_my_system_or_adding_unwanted_menu_entries.2Fdesktop_links.3F
+    WINEDLLOVERRIDES: winemenubuilder.exe=d
+
+  # Install
+
+  roles:
+    - name: Configuring Wine prefix
+      role: wineprefix
+
+    - name: Installing Python dependencies
+      role: python
+      when: true
+
+    - name: Installing Kindle
+      role: winetricks
+      vars:
+        package_name: "kindle"
+      when: install_kindle
+
+    - name: Installing Adobe Digital Editions 1.x
+      role: winetricks
+      vars:
+        package_name: "adobe_diged"
+      when: install_adobeDE_1
+
+    - name: Installing Adobe Digital Editions 4.y
+      role: winetricks
+      vars:
+        package_name: "adobe_diged4"
+      when: install_adobeDE_4
