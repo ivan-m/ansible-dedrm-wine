@@ -5,5 +5,7 @@ wine_architecture: "32" # 64 probably doesn't work
 
 install_kindle: true
 
-install_adobeDE_1: true
+# DeDRM reports that 1.7 is no longer supported; leaving the
+# configuration option in in case it's still desired.
+install_adobeDE_1: false
 install_adobeDE_4: true
