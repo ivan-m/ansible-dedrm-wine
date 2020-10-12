@@ -1,8 +1,5 @@
 ---
 
-python_version: "2.7.13"
-pycrypto_version: "2.6.1"
-
 # For uninstallation/retry purposes it's best if these are in wine_prefix
 python_installer_location: "{{ wine_prefix }}/python-{{ python_version }}.msi"
 pycrypto_installer_location: "{{ wine_prefix }}/pycrypto-{{ pycrypto_version }}.msi"

@@ -14,3 +14,7 @@ install_kindle: true
 # configuration option in in case it's still desired.
 install_adobeDE_1: false
 install_adobeDE_4: true
+
+# Probably don't want to change these.
+python_version: "2.7.13"
+pycrypto_version: "2.6.1"
