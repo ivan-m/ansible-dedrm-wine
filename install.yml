@@ -16,6 +16,17 @@
     # https://wiki.winehq.org/FAQ#How_can_I_prevent_Wine_from_changing_the_filetype_associations_on_my_system_or_adding_unwanted_menu_entries.2Fdesktop_links.3F
     WINEDLLOVERRIDES: winemenubuilder.exe=d
 
+  pre_tasks:
+    - name: Ensure download directory exists
+      file:
+        path: "{{ download_dir }}"
+        mode: '0700'
+        state: directory
+      # If it's the wineprefix, then don't create or we can't tell if
+      # we need to initialise it.  Just make sure that the wineprefix
+      # role is the first one we do.
+      when: wine_prefix != download_dir
+
   # Install
 
   roles:

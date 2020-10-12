@@ -12,3 +12,7 @@
       file:
         path: "{{ wine_prefix }}"
         state: absent
+
+    - debug:
+        msg: "Installers in {{ download_dir }} are untouched"
+      when: wine_prefix != download_dir

@@ -3,6 +3,11 @@
 wine_prefix: "{{ ansible_env.HOME }}/.wine_dedrm"
 wine_architecture: "32" # 64 probably doesn't work
 
+# Change this if you are doing lots of runs and want to avoid
+# re-downloading every time.
+download_dir: "{{ wine_prefix }}"
+# download_dir: "{{ ansible_env.HOME }}/.wine_dedrm_installers"
+
 install_kindle: true
 
 # DeDRM reports that 1.7 is no longer supported; leaving the
