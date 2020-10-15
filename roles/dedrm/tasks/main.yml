@@ -6,9 +6,7 @@
   register: dedrm_unpack_check
 
 - set_fact:
-    have_dedrm:
-      - dedrm_unpack_dir.stat.isdir is defined
-      - dedrm_unpack_dir.stat.isdir
+    have_dedrm: "{{ dedrm_unpack_dir.stat.isdir is defined and dedrm_unpack_dir.stat.isdir }}"
 
 - name: DeDRM already fetched
   debug:
@@ -22,17 +20,14 @@
   when: not have_dedrm
 
 - set_fact:
-    have_dedrm_download:
-      - have_dedrm
-      - dedrm_download_check.stat.isreg is defined
-      - dedrm_download_check.stat.isreg
+    have_dedrm_download: "{{ have_dedrm and dedrm_download_check.stat.isreg is defined and dedrm_download_check.stat.isreg }}"
 
 - name: Download DeDRM
   get_url:
     url: "{{ dedrm_url }}"
     dest: "{{ dedrm_download_file }}"
     mode: '0600'
-  when: not (have_dedrm_download|bool)
+  when: not have_dedrm_download | bool
 
 - name: Create DeDRM directory
   file:
@@ -45,4 +40,4 @@
     src: "{{ dedrm_download_file }}"
     dest: "{{ dedrm_unpack_dir }}"
     remote_src: yes
-  when: not (have_dedrm|bool)
+  when: not have_dedrm | bool

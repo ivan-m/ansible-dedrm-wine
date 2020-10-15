@@ -6,9 +6,7 @@
   register: pkg_install_check
 
 - set_fact:
-    have_app:
-      - pkg_install_check.stat.isdir is defined
-      - pkg_install_check.stat.isdir
+    have_app: "{{ pkg_install_check.stat.isdir is defined and pkg_install_check.stat.isdir }}"
 
 - name: Package is already installed
   debug:
@@ -19,26 +17,23 @@
   stat:
     path: "{{ pkg_installer_path }}"
   register: installer_check
-  when: not (have_app | bool)
+  when: not have_app | bool
 
 - set_fact:
-    have_installer:
-      - have_app
-      - installer_check.stat.isreg is defined
-      - installer_check.stat.isreg
+    have_installer: "{{ have_app and installer_check.stat.isreg is defined installer_check.stat.isreg }}"
 
 - name: Download installer
   get_url:
     url: "{{ pkg_installer_url }}"
     dest: "{{ pkg_installer_path }}"
     mode: '0600'
-  when: not (have_installer | bool)
+  when: not have_installer | bool
 
 - debug:
     msg: Please accept all defaults in the installer window that appears.
-  when: not (have_app | bool)
+  when: not have_app | bool
 
 - name: "Installing {{ pkg_name }}"
   command:
     msiexec /i {{ pkg_installer_path }}
-  when: not (have_app | bool)
+  when: not have_app | bool

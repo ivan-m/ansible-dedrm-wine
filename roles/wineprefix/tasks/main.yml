@@ -6,9 +6,7 @@
   register: wine_prefix_check
 
 - set_fact:
-    have_prefix:
-      - wine_prefix_check.stat.isdir is defined
-      - wine_prefix_check.stat.isdir
+    have_prefix: "{{ wine_prefix_check.stat.isdir is defined and wine_prefix_check.stat.isdir }}"
 
 - name: Prefix already exists
   debug:
@@ -20,7 +18,7 @@
     cmd: wine wineboot --init
     creates: "{{ wine_prefix }}"
       # This duplicates the when conditional check
-  when: not (have_prefix | bool)
+  when: not have_prefix | bool
 
 - name: "Find out what is installed already with winetricks"
   command:
