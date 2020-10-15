@@ -26,6 +26,8 @@
   command:
     winetricks --unattended list-installed
   register: winetricks_installed
+  # This should have no side effects
+  changed_when: false
 
 - name: Clean up installed list
   set_fact:

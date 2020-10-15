@@ -6,5 +6,6 @@ pkgs.mkShell {
     ansible
     wine
     winetricks
+    unzip
   ];
 }

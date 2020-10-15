@@ -1,0 +1,9 @@
+---
+
+dedrm_url: "https://github.com/apprenticeharper/DeDRM_tools/releases/download/v{{ dedrm_version }}/DeDRM_tools_{{ dedrm_version }}.zip"
+
+# Having it in wine_prefix makes it easier to uninstall
+dedrm_download_file: "{{ download_dir }}/DeDRM_{{ dedrm_version }}.zip"
+dedrm_unpack_dir: "{{ wine_prefix }}/DeDRM_{{ dedrm_version }}"
+
+dedrm_plugin: "{{ dedrm_unpack_dir }}/DeDRM_Plugin.zip"

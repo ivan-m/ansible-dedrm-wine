@@ -35,7 +35,9 @@
 
     - name: Installing Python dependencies
       role: python
-      when: true
+
+    - name: Getting DeDRM
+      role: dedrm
 
     - name: Installing Kindle
       role: winetricks

@@ -1,0 +1,48 @@
+---
+
+- name: Check if DeDRM has already been unpacked
+  stat:
+    path: "{{ dedrm_unpack_dir }}"
+  register: dedrm_unpack_check
+
+- set_fact:
+    have_dedrm:
+      - dedrm_unpack_dir.stat.isdir is defined
+      - dedrm_unpack_dir.stat.isdir
+
+- name: DeDRM already fetched
+  debug:
+    msg: "DeDRM is already unpacked in {{ dedrm_unpack_dir }}"
+  when: have_dedrm | bool
+
+- name: Check if we need to fetch DeDRM
+  stat:
+    path: "{{ dedrm_download_file }}"
+  register: dedrm_download_check
+  when: not have_dedrm
+
+- set_fact:
+    have_dedrm_download:
+      - have_dedrm
+      - dedrm_download_check.stat.isreg is defined
+      - dedrm_download_check.stat.isreg
+
+- name: Download DeDRM
+  get_url:
+    url: "{{ dedrm_url }}"
+    dest: "{{ dedrm_download_file }}"
+    mode: '0600'
+  when: not (have_dedrm_download|bool)
+
+- name: Create DeDRM directory
+  file:
+    path: "{{ dedrm_unpack_dir }}"
+    mode: '0700'
+    state: directory
+
+- name: Unpack DeDRM
+  unarchive:
+    src: "{{ dedrm_download_file }}"
+    dest: "{{ dedrm_unpack_dir }}"
+    remote_src: yes
+  when: not (have_dedrm|bool)
