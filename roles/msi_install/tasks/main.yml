@@ -20,7 +20,7 @@
   when: not have_app | bool
 
 - set_fact:
-    have_installer: "{{ have_app and installer_check.stat.isreg is defined installer_check.stat.isreg }}"
+    have_installer: "{{ have_app or (installer_check.stat.isreg is defined and installer_check.stat.isreg) }}"
 
 - name: Download installer
   get_url:
