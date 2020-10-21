@@ -49,9 +49,7 @@
       role: dedrm
 
     - name: Installing Kindle
-      role: winetricks
-      vars:
-        package_name: "kindle"
+      role: kindle
       when: install_kindle
 
     - name: Installing Adobe Digital Editions 1.x

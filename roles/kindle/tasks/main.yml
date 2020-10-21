@@ -1,0 +1,89 @@
+---
+
+- name: Check if keyfile already exists
+  stat:
+    path: "{{ kindle_keyfile }}"
+  register: keyfile_check
+
+- set_fact:
+    have_keyfile: "{{ keyfile_check.stat.isreg is defined and keyfile_check.stat.isreg }}"
+
+- name: Create DeDRM plugin directory
+  file:
+    path: "{{ dedrm_plugin_unpack_dir }}"
+    mode: '0700'
+    state: directory
+  when: not have_keyfile | bool
+
+- name: Check if DeDRM plugin is already unpacked
+  find:
+    paths: "{{ dedrm_plugin_unpack_dir }}"
+    patterns: '*'
+  register: plugin_unpack_contents
+  when: not have_keyfile | bool
+
+- name: Unpack DeDRM plugin
+  unarchive:
+    src: "{{ dedrm_plugin }}"
+    dest: "{{ dedrm_plugin_unpack_dir }}"
+    remote_src: yes
+  when:
+    - not have_keyfile | bool
+    - plugin_unpack_contents.matched == 0
+
+- name: See if Kindle has been run/configured
+  stat:
+    path: "{{ kindle_data_dir }}"
+  register: kindle_run_check
+
+- set_fact:
+    kindle_has_been_run: "{{ have_keyfile or (kindle_run_check.stat.isdir is defined and kindle_run_check.stat.isdir) }}"
+
+- debug:
+    msg: Please sign in to Kindle.
+  when: not kindle_has_been_run | bool
+
+- name: Run Kindle so that we can get kinfoFiles
+  command:
+    cmd: wine {{ kindle_path }}
+    creates: "{{ kindle_data_dir }}"
+  register: run_kindle
+  # Can't rely upon checking stderr due to wine debugging messages,
+  # and if the exe is found wine will just silently die.
+  #
+  # Unfortunately there seems to be no reliable way of telling if
+  # someone actually logged in to their Amazon account.
+  failed_when: >
+      (run_kindle.rc != 0) or
+      ('wine: cannot find' in run_kindle.stderr)
+  when: not kindle_has_been_run | bool
+
+- name: Create key file
+  command:
+    argv:
+      - wine
+      - "{{ python_exe }}"
+      - "{{ dedrm_plugin_unpack_dir }}/kindlekey.py"
+      - "{{ kindle_keyfile }}"
+    chdir: "{{ wine_prefix }}"
+    creates: "{{ kindle_keyfile }}"
+  environment:
+    PYTHONPATH: ""
+  register: create_key
+  when: not have_keyfile | bool
+
+- name: Key extraction failure
+  fail:
+    msg: |
+      Unable to extract key file; this may be because you didn't
+      login to your Amazon account when the Kindle app launched.
+
+      Please try manually launching the Kindle app and authenticate
+      before re-running this Ansible playbook.
+
+      Alternatively, re-run this playbook with additional debugging
+      (e.g. append -vvv to the end of the commandline) and see what
+      the actual error message is.
+  when:
+    - not have_keyfile | bool
+    - "'Saved a key' not in create_key.stdout"

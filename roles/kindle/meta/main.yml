@@ -1,0 +1,9 @@
+---
+
+dependencies:
+  - role: wineprefix
+  - role: dedrm
+  - role: python
+  - role: winetricks
+    vars:
+      package_name: "kindle"
