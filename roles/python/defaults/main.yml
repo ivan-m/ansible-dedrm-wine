@@ -15,3 +15,5 @@ pycrypto_simple_version: "{{ pycrypto_version | regex_replace('\\.', '') }}"
 python_exe: "C:\\Python{{ python_simple_version }}\\python.exe"
 python_install_dir: "Python{{ python_simple_version }}/"
 pycrypto_install_dir: "Lib/site-packages/pycrypto-{{ pycrypto_version }}-py{{ python_major_version }}.egg-info/"
+
+python_test_string: "Python in wine works!"

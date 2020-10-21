@@ -1,0 +1,17 @@
+---
+
+- name: Test that Python in Wine works
+  command:
+    argv:
+      - wine
+      - "{{ python_exe }}"
+      - -c
+      - "print(\"{{ python_test_string }}\")"
+    chdir: "{{ wine_prefix }}"
+  environment:
+    # Make sure that Linux PYTHONPATH doesn't go in; this can cause
+    # issues due to maximum path length being exceeded in wine Python.
+    PYTHONPATH: ""
+  register: python_test
+  changed_when: false
+  failed_when: python_test_string not in python_test.stdout
