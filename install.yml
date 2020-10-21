@@ -10,11 +10,8 @@
   environment:
     WINEPREFIX: "{{ wine_prefix }}"
     WINEARCH: "win{{ wine_architecture }}"
-    # Disables menu entries and mimeconfig; TODO: make this
-    # configurable
-    #
-    # https://wiki.winehq.org/FAQ#How_can_I_prevent_Wine_from_changing_the_filetype_associations_on_my_system_or_adding_unwanted_menu_entries.2Fdesktop_links.3F
-    WINEDLLOVERRIDES: winemenubuilder.exe=d
+    # Suppress some warnings
+    WINEDEBUG: -msvcrt
 
   pre_tasks:
     - name: Ensure download directory exists
@@ -32,9 +29,21 @@
   roles:
     - name: Configuring Wine prefix
       role: wineprefix
+      environment:
+        # Disables menu entries and mimeconfig; we don't want all the
+        # random notepad.exe associations, etc.
+        #
+        # https://wiki.winehq.org/FAQ#How_can_I_prevent_Wine_from_changing_the_filetype_associations_on_my_system_or_adding_unwanted_menu_entries.2Fdesktop_links.3F
+        WINEDLLOVERRIDES: winemenubuilder.exe=d
 
     - name: Installing Python dependencies
       role: python
+      environment:
+        # Disables menu entries and mimeconfig; Python is only used
+        # internally and doesn't need to be accessed from outside.
+        #
+        # https://wiki.winehq.org/FAQ#How_can_I_prevent_Wine_from_changing_the_filetype_associations_on_my_system_or_adding_unwanted_menu_entries.2Fdesktop_links.3F
+        WINEDLLOVERRIDES: winemenubuilder.exe=d
 
     - name: Getting DeDRM
       role: dedrm
