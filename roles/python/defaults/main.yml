@@ -1,9 +1,5 @@
 ---
 
-# For uninstallation/retry purposes it's best if these are in wine_prefix
-python_installer_location: "{{ wine_prefix }}/python-{{ python_version }}.msi"
-pycrypto_installer_location: "{{ wine_prefix }}/pycrypto-{{ pycrypto_version }}.msi"
-
 # e.g. 2.7.13 => 2.7
 python_major_version: "{{ python_version | regex_replace('^(.\\.[^\\.]+).*$', '\\1') }}"
 
