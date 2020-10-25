@@ -1,0 +1,43 @@
+---
+
+- name: Set WINEPREFIX for {{ drm }}
+  json_patch:
+    src: "{{ plugin_config_file }}"
+    pretty: true
+    operations:
+      - op: add
+        path: "/{{ drm }}wineprefix"
+        value: "{{ wine_prefix }}"
+
+- set_fact:
+    have_keyfile: "{{ keyfile is defined }}"
+
+- name: Check if keyfile for {{ drm }} exists
+  stat:
+    path: "{{ keyfile }}"
+  register: keyfile_details
+  when: have_keyfile | bool
+
+- set_fact:
+    have_keyfile: "{{ keyfile_details.stat.isreg is defined and keyfile_details.stat.isreg }}"
+  when: have_keyfile | bool
+
+- name: Read in keyfile for {{ drm }}
+  slurp:
+    path: "{{ keyfile }}"
+  register: keyfile_contents
+  when: have_keyfile | bool
+
+- set_fact:
+    keyfile_contents: "{{ keyfile_contents.content | b64decode | from_json }}"
+  when: have_keyfile | bool
+
+- name: Set key details for {{ drm }}
+  json_patch:
+    src: "{{ plugin_config_file }}"
+    pretty: true
+    operations:
+      - op: add
+        path: "/{{ drm }}keys/{{ drm }}key"
+        value: "{{ keyfile_contents }}"
+  when: have_keyfile | bool

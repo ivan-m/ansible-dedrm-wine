@@ -87,3 +87,10 @@
   when:
     - not have_keyfile | bool
     - "'Saved a key' not in create_key.stdout"
+
+- name: Configure plugin
+  include_role:
+    name: plugin_options
+  vars:
+    drm: "kindle"
+    keyfile: "{{ kindle_keyfile }}"
