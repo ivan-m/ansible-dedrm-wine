@@ -1,0 +1,26 @@
+---
+
+- hosts: localhost
+
+  any_errors_fatal: true
+
+  vars_files:
+    - configuration.yml
+
+  tasks:
+
+    - name: Unregister DeDRM plugin from Calibre
+      command:
+        calibre-customize --remove-plugin=DeDRM
+      args:
+        removes: "{{ installed_plugin }}"
+
+    - name: Remove plugin library
+      file:
+        path: "{{ calibre_plugin_dir }}/DeDRM/"
+        state: absent
+
+    - name: Remove plugin customisation file
+      file:
+        path: "{{ plugin_config_file }}"
+        state: absent

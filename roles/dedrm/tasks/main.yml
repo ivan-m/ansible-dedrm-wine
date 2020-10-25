@@ -41,3 +41,9 @@
     dest: "{{ dedrm_unpack_dir }}"
     remote_src: yes
   when: not have_dedrm | bool
+
+- name: Install plugin into Calibre
+  command:
+    calibre-customize --add-plugin={{ dedrm_plugin }}
+  args:
+    creates: "{{ installed_plugin }}"

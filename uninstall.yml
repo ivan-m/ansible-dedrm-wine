@@ -1,5 +1,8 @@
 ---
 
+- name: Remove DeDRM plugin
+  import_playbook: remove-plugin.yml
+
 - hosts: localhost
 
   any_errors_fatal: true
@@ -8,6 +11,7 @@
     - configuration.yml
 
   tasks:
+
     - name: Ensure wine prefix doesn't exist
       file:
         path: "{{ wine_prefix }}"

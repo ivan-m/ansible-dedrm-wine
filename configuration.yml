@@ -20,3 +20,10 @@ install_adobeDE_4: true
 # Probably don't want to change these.
 python_version: "2.7.13"
 pycrypto_version: "2.6.1"
+
+# These probably shouldn't be customised; they're defined here for
+# remove-plugin.yml and internal definitions.
+config_dir: "{{ ansible_env.XDG_CONF_DIR | default( ansible_env.HOME + '/.config' ) }}"
+calibre_plugin_dir: "{{ config_dir }}/calibre/plugins/"
+installed_plugin: "{{ calibre_plugin_dir }}/DeDRM.zip"
+plugin_config_file: "{{ calibre_plugin_dir }}/dedrm.json"

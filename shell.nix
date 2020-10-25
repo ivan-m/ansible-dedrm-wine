@@ -4,6 +4,7 @@ in
 pkgs.mkShell {
   buildInputs = with pkgs; [
     ansible
+    calibre
     wine
     winetricks
     unzip
