@@ -20,6 +20,19 @@
       # This duplicates the when conditional check
   when: not have_prefix | bool
 
+- name: See if crash dialogs are disabled
+  shell:
+    wine regedit /E - 'HKEY_CURRENT_USER\Software\Wine\WineDbg' | dos2unix
+  register: crash_dialog_check
+  changed_when: false
+
+  # See https://wiki.winehq.org/FAQ#How_do_I_disable_the_GUI_crash_dialog.3F
+- name: Disable crash dialogs in Wine
+  command:
+    winetricks nocrashdialog
+  when: >
+      ('"ShowCrashDialog"=dword:00000000' not in crash_dialog_check.stdout)
+
 - name: "Find out what is installed already with winetricks"
   command:
     winetricks --unattended list-installed
