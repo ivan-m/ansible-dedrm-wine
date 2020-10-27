@@ -9,5 +9,6 @@ pkgs.mkShell {
     winetricks
     unzip
     xxd
+    zip
   ];
 }
