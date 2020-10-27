@@ -42,6 +42,25 @@
     remote_src: yes
   when: not have_dedrm | bool
 
+- name: Create DeDRM plugin directory
+  file:
+    path: "{{ dedrm_plugin_unpack_dir }}"
+    mode: '0700'
+    state: directory
+
+- name: Check if DeDRM plugin is already unpacked
+  find:
+    paths: "{{ dedrm_plugin_unpack_dir }}"
+    patterns: '*'
+  register: plugin_unpack_contents
+
+- name: Unpack DeDRM plugin
+  unarchive:
+    src: "{{ dedrm_plugin }}"
+    dest: "{{ dedrm_plugin_unpack_dir }}"
+    remote_src: yes
+  when: plugin_unpack_contents.matched == 0
+
 - name: Install plugin into Calibre
   command:
     calibre-customize --add-plugin={{ dedrm_plugin }}

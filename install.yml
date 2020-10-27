@@ -52,14 +52,6 @@
       role: kindle
       when: install_kindle
 
-    - name: Installing Adobe Digital Editions 1.x
-      role: winetricks
-      vars:
-        package_name: "adobe_diged"
-      when: install_adobeDE_1
-
-    - name: Installing Adobe Digital Editions 4.y
-      role: winetricks
-      vars:
-        package_name: "adobe_diged4"
-      when: install_adobeDE_4
+    - name: Installing Adobe Digital Editions
+      role: adobe
+      when: install_adobe

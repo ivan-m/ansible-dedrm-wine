@@ -1,6 +1,5 @@
 ---
 
-dedrm_plugin_unpack_dir: "{{ dedrm_unpack_dir }}/plugin_contents"
 kindle_keyfile: "{{ dedrm_unpack_dir }}/kindlekey.k4i"
 
 kindle_path: "{{ wine_prefix }}/drive_c/Program\\ Files/Amazon/Kindle/Kindle.exe"

@@ -12,10 +12,9 @@ download_dir: "{{ wine_prefix }}"
 
 install_kindle: true
 
-# DeDRM reports that 1.7 is no longer supported; leaving the
-# configuration option in in case it's still desired.
-install_adobeDE_1: false
-install_adobeDE_4: true
+# DeDRM reports that 1.7 is no longer supported; as such, this will
+# use 4.5.
+install_adobe: true
 
 # Probably don't want to change these.
 python_version: "2.7.13"

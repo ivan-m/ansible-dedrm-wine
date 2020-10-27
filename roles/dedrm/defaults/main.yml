@@ -7,3 +7,4 @@ dedrm_download_file: "{{ download_dir }}/DeDRM_{{ dedrm_version }}.zip"
 dedrm_unpack_dir: "{{ wine_prefix }}/DeDRM_{{ dedrm_version }}"
 
 dedrm_plugin: "{{ dedrm_unpack_dir }}/DeDRM_Plugin.zip"
+dedrm_plugin_unpack_dir: "{{ dedrm_unpack_dir }}/plugin_contents"

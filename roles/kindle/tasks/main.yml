@@ -8,36 +8,19 @@
 - set_fact:
     have_keyfile: "{{ keyfile_check.stat.isreg is defined and keyfile_check.stat.isreg }}"
 
-- name: Create DeDRM plugin directory
-  file:
-    path: "{{ dedrm_plugin_unpack_dir }}"
-    mode: '0700'
-    state: directory
-  when: not have_keyfile | bool
-
-- name: Check if DeDRM plugin is already unpacked
-  find:
-    paths: "{{ dedrm_plugin_unpack_dir }}"
-    patterns: '*'
-  register: plugin_unpack_contents
-  when: not have_keyfile | bool
-
-- name: Unpack DeDRM plugin
-  unarchive:
-    src: "{{ dedrm_plugin }}"
-    dest: "{{ dedrm_plugin_unpack_dir }}"
-    remote_src: yes
-  when:
-    - not have_keyfile | bool
-    - plugin_unpack_contents.matched == 0
+- set_fact:
+    kindle_has_been_run: true
+  when: have_keyfile | bool
 
 - name: See if Kindle has been run/configured
   stat:
     path: "{{ kindle_data_dir }}"
   register: kindle_run_check
+  when: not have_keyfile | bool
 
 - set_fact:
     kindle_has_been_run: "{{ have_keyfile or (kindle_run_check.stat.isdir is defined and kindle_run_check.stat.isdir) }}"
+  when: not have_keyfile | bool
 
 - debug:
     msg: Please sign in to Kindle.
@@ -88,9 +71,28 @@
     - not have_keyfile | bool
     - "'Saved a key' not in create_key.stdout"
 
-- name: Configure plugin
-  include_role:
-    name: plugin_options
-  vars:
-    drm: "kindle"
-    keyfile: "{{ kindle_keyfile }}"
+- name: Set wineprefix for Kindle in DeDRM
+  json_patch:
+    src: "{{ plugin_config_file }}"
+    pretty: true
+    operations:
+      - op: add
+        path: "/kindlewineprefix"
+        value: "{{ wine_prefix }}"
+
+- name: Read in Kindle keyfile
+  slurp:
+    path: "{{ kindle_keyfile }}"
+  register: keyfile_contents
+
+- set_fact:
+    keyfile_contents: "{{ keyfile_contents.content | b64decode | from_json }}"
+
+- name: Set key for Kindle in DeDRM
+  json_patch:
+    src: "{{ plugin_config_file }}"
+    pretty: true
+    operations:
+      - op: add
+        path: "/kindlekeys/kindlekey"
+        value: "{{ keyfile_contents }}"

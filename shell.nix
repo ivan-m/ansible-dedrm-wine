@@ -8,5 +8,6 @@ pkgs.mkShell {
     wine
     winetricks
     unzip
+    xxd
   ];
 }

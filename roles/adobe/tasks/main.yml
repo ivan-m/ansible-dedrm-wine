@@ -1,0 +1,101 @@
+---
+
+- name: Check if keyfile already exists
+  stat:
+    path: "{{ adobe_keyfile }}"
+  register: keyfile_check
+
+- set_fact:
+    have_keyfile: "{{ keyfile_check.stat.isreg is defined and keyfile_check.stat.isreg }}"
+
+- set_fact:
+    adobe_has_been_run: true
+  when: have_keyfile | bool
+
+- name: See if Adobe has been run/configured
+  # Unfortunately, ADE doesn't seem to create a fixed directory/file
+  # when it is run and relies on registry keys instead.  As such, we
+  # query that.
+  command:
+    cmd: wine regedit /E /dev/null 'HKEY_CURRENT_USER\Software\Adobe\Adept\Activation'
+  register: adobe_regedit
+  changed_when: false
+  when: not have_keyfile | bool
+
+- set_fact:
+    adobe_has_been_run: "{{ 'Unable to open the registry key' not in adobe_regedit.stdout }}"
+  when: not have_keyfile | bool
+
+- debug:
+    msg: Please sign in to Adobe.
+  when: not adobe_has_been_run | bool
+
+- name: Run Adobe so that it can get authenticated
+  command:
+    cmd: wine {{ adobe_path }}
+  register: run_adobe
+  # Can't rely upon checking stderr due to wine debugging messages,
+  # and if the exe is found wine will just silently die.
+  #
+  # Unfortunately there seems to be no reliable way of telling if
+  # someone actually logged in to their Amazon account.
+  failed_when: >
+      (run_adobe.rc != 0) or
+      ('wine: cannot find' in run_adobe.stderr)
+  when: not adobe_has_been_run | bool
+
+- name: Create key file
+  command:
+    argv:
+      - wine
+      - "{{ python_exe }}"
+      - "{{ dedrm_plugin_unpack_dir }}/adobekey.py"
+      - "{{ adobe_keyfile }}"
+    chdir: "{{ wine_prefix }}"
+    creates: "{{ adobe_keyfile }}"
+  environment:
+    PYTHONPATH: ""
+  register: create_key
+  when: not have_keyfile | bool
+
+- name: Key extraction failure
+  fail:
+    msg: |
+      Unable to extract key file; this may be because you didn't login
+      to your Adobe account when the Digital Editions app launched.
+
+      Please try manually launching the Adobe Digital Editions app and
+      authenticate before re-running this Ansible playbook.
+
+      Alternatively, re-run this playbook with additional debugging
+      (e.g. append -vvv to the end of the commandline) and see what
+      the actual error message is.
+  when:
+    - not have_keyfile | bool
+    - "'Saved a key' not in create_key.stdout"
+
+- name: Set wineprefix for Adobe in DeDRM
+  json_patch:
+    src: "{{ plugin_config_file }}"
+    pretty: true
+    operations:
+      - op: add
+        path: "/adobewineprefix"
+        value: "{{ wine_prefix }}"
+
+- name: Read in Adobe keyfile
+  # We want the hexadecimal representation of this file; doesn't seem
+  # to have an available filter in Ansible for it.
+  shell:
+    xxd -ps {{ adobe_keyfile }} | tr -d '\n'
+  register: keyfile_contents
+  changed_when: false
+
+- name: Set key for Kindle in DeDRM
+  json_patch:
+    src: "{{ plugin_config_file }}"
+    pretty: true
+    operations:
+      - op: add
+        path: "/adeptkeys/adobekey"
+        value: "{{ keyfile_contents.stdout }}"
