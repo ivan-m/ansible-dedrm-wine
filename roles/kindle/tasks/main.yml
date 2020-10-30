@@ -28,7 +28,7 @@
 
 - name: Run Kindle so that we can get kinfoFiles
   command:
-    cmd: wine {{ kindle_path }}
+    cmd: wine '{{ kindle_path }}'
     creates: "{{ kindle_data_dir }}"
   register: run_kindle
   # Can't rely upon checking stderr due to wine debugging messages,

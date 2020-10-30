@@ -32,7 +32,7 @@
 
 - name: Run Adobe so that it can get authenticated
   command:
-    cmd: wine {{ adobe_path }}
+    wine '{{ adobe_path }}'
   register: run_adobe
   # Can't rely upon checking stderr due to wine debugging messages,
   # and if the exe is found wine will just silently die.

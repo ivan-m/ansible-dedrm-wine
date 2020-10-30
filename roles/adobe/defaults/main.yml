@@ -3,4 +3,4 @@
 adobe_keyfile: "{{ dedrm_unpack_dir }}/adobekey.der"
 
 # Unfortunately this is hardcoded for the version number.
-adobe_path: "{{ wine_prefix }}/drive_c/Program\\ Files/Adobe/Adobe\\ Digital\\ Editions\\ 4.5/DigitalEditions.exe"
+adobe_path: "{{ wine_prefix }}/drive_c/Program Files/Adobe/Adobe Digital Editions 4.5/DigitalEditions.exe"
