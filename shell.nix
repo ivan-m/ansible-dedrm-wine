@@ -1,10 +1,9 @@
-let
-  pkgs = import <nixpkgs> {};
-in
+{ pkgs ? import <nixpkgs> {} }:
 pkgs.mkShell {
   buildInputs = with pkgs; [
     ansible
-    calibre
+    cacert # For winetricks
+    calibre # Need calibre-py2 as of 20.09
     dos2unix
     wine
     winetricks

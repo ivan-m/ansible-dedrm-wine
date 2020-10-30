@@ -10,12 +10,11 @@
 
 - name: "Installing {{ package_name }}"
   command:
-    winetricks --unattended --force {{ package_name }}
-  when: not package_is_installed | bool
-
-- name: Ensure {{ package_name }} finishes installing
-  command:
-    wineserver --kill
+    # Within a nix-shell, the SHELL variable somehow breaks using
+    # winetricks with dotnet35sp1.  Unfortunately, there doesn't seem
+    # to be any way to conditionally unset this variable just when
+    # running that installer.
+    env --unset=SHELL winetricks --unattended --force {{ package_name }}
   when: not package_is_installed | bool
 
 - name: Check if Windows version still set to 7

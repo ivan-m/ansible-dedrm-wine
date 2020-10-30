@@ -4,6 +4,15 @@ dependencies:
   - role: wineprefix
   - role: dedrm
   - role: python
+
+  # Unknown if all these are actually required; taken from
+  # https://patdavid.net/2018/05/installing-adobe-digital-editions-on-linux-with-wine/
   - role: winetricks
     vars:
-      package_name: "adobe_diged4"
+      package_name: "corefonts"
+  - role: winetricks
+    vars:
+      package_name: "windowscodecs"
+  - role: winetricks
+    vars:
+      package_name: "dotnet35sp1"

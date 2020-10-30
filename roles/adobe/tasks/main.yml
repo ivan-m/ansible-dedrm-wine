@@ -1,5 +1,45 @@
 ---
 
+- name: Check if Adobe is already installed
+  stat:
+    path: "{{ adobe_path }}"
+  register: adobe_install_check
+
+- set_fact:
+    have_adobe: "{{ adobe_install_check.stat.isreg is defined and adobe_install_check.stat.isreg }}"
+
+- name: Adobe is already installed
+  debug:
+    msg: Adobe is already installed in {{ wine_prefix }}
+  when: have_adobe | bool
+
+- name: Check if we need to download the installer
+  stat:
+    path: "{{ adobe_installer }}"
+  register: installer_check
+  when: not have_adobe | bool
+
+- set_fact:
+    have_installer: "{{ have_adobe or (installer_check.stat.isreg is defined and installer_check.stat.isreg) }}"
+
+- name: Download installer
+  get_url:
+    url: "{{ adobe_url }}"
+    dest: "{{ adobe_installer }}"
+    mode: '0600'
+  when: not have_installer | bool
+
+- debug:
+    msg: >-
+        Please accept all defaults in the installer window that
+        appears (disabling shortcuts is OK).
+  when: not have_adobe | bool
+
+- name: Installing Adobe
+  command:
+    wine '{{ adobe_installer }}'
+  when: not have_adobe | bool
+
 - name: Check if keyfile already exists
   stat:
     path: "{{ adobe_keyfile }}"
@@ -16,6 +56,9 @@
   # Unfortunately, ADE doesn't seem to create a fixed directory/file
   # when it is run and relies on registry keys instead.  As such, we
   # query that.
+  #
+  # This isn't a perfect check however, as it could have been created
+  # even if it wasn't activated.
   command:
     cmd: wine regedit /E /dev/null 'HKEY_CURRENT_USER\Software\Adobe\Adept\Activation'
   register: adobe_regedit
@@ -38,7 +81,7 @@
   # and if the exe is found wine will just silently die.
   #
   # Unfortunately there seems to be no reliable way of telling if
-  # someone actually logged in to their Amazon account.
+  # someone actually logged in to their Adobe account.
   failed_when: >
       (run_adobe.rc != 0) or
       ('wine: cannot find' in run_adobe.stderr)
@@ -60,7 +103,7 @@
 
 - name: Key extraction failure
   fail:
-    msg: |
+    msg: >-
       Unable to extract key file; this may be because you didn't login
       to your Adobe account when the Digital Editions app launched.
 
@@ -91,7 +134,7 @@
   register: keyfile_contents
   changed_when: false
 
-- name: Set key for Kindle in DeDRM
+- name: Set key for Adobe in DeDRM
   json_patch:
     src: "{{ plugin_config_file }}"
     pretty: true
