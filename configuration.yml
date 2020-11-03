@@ -15,7 +15,7 @@ download_dir: "{{ wine_prefix }}"
 install_kindle: true
 
 # DeDRM reports that 1.7 is no longer supported; as such, this will
-# use 4.5.
+# use 2.0 (as newer versions aren't as compatible).
 install_adobe: true
 
 # Probably don't want to change these.
