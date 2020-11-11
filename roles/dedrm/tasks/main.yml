@@ -68,15 +68,24 @@
     replace: '\1PYTHONPATH=\"\" '
   when: dedrm_pythonpath_fix
 
+- name: Tweak plugin to fix PyCrypto RSA call
+  replace:
+    path: "{{ dedrm_plugin_unpack_dir }}/ineptepub.py"
+    after: 'def bytesToNumber\(self, bytes\):'
+    before: 'def decrypt\(self, data\):'
+    regexp: 'return total'
+    replace: 'return long(total)'
+  when: dedrm_pycrypto_rsa_fix
+
 - name: Re-pack tweaked plugin
   archive:
     path: "{{ dedrm_plugin_unpack_dir }}/*"
     dest: "{{ dedrm_fixed_plugin }}"
     format: zip
-  when: dedrm_pythonpath_fix
+  when: dedrm_pythonpath_fix or dedrm_pycrypto_rsa_fix
 
 - name: Install plugin into Calibre
   command:
-    calibre-customize --add-plugin={{ dedrm_fixed_plugin if dedrm_pythonpath_fix else dedrm_plugin }}
+    calibre-customize --add-plugin={{ dedrm_fixed_plugin if dedrm_pythonpath_fix or dedrm_pycrypto_rsa_fix else dedrm_plugin }}
   args:
     creates: "{{ installed_plugin }}"
