@@ -1,8 +1,6 @@
 ---
 
-dedrm_version: "6.8.0"
-# Fix DeDRM plugin to set PYTHONPATH="" when running Wine Python.
-dedrm_pythonpath_fix: true
+dedrm_version: "6.8.1"
 # Fix DeDRM plugin to avoid issues like this:
 #
 #        key = self._math.rsa_construct(*tup)

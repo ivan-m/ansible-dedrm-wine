@@ -7,10 +7,11 @@ Only use this to backup the books you own, etc.
 
 ## Why write this?
 
-I kept having issues migrating over my Calibre + DeDRM configuration
-from one computer to another, and got sick of manually repeating all
-the steps.  Furthermore, writing this let me brush up on my Ansible
-skills.
+I kept having issues migrating over my Calibre +
+[DeDRM](https://github.com/apprenticeharper/DeDRM_tools/)
+configuration from one computer to another, and got sick of manually
+repeating all the steps.  Furthermore, writing this let me brush up on
+my Ansible skills.
 
 Whilst doing this I also came across several issues (that might be due
 to my own setup) and found how to deal with them.
@@ -26,8 +27,8 @@ This Ansible playbook will automate:
 
 ### Dependencies
 
-The canonical list of Windows dependencies as required for NixOS 20.03
-can be found [here](shell.nix).  Package names for other Linux
+The canonical list of Windows dependencies as required for NixOS 20.09
+can be found in [shell.nix].  Package names for other Linux
 distributions will vary.
 
 In particular, you will need to use a version of Calibre using
@@ -97,7 +98,7 @@ If using NixOS or nixpkgs, then you should first run `nix-shell
 --pure` in this directory to ensure that you get the required
 dependencies installed, especially since Ansible doesn't work when
 installed at the top-level.  This was tested with Nixpkgs version
-`20.03.3191.504f993df9a`.
+`20.09.4321.115dbbe82eb`.
 
 Note that as of 20.09, the `calibre` package uses Python 3; as such,
 be sure to use `calibre-py2` for both the the system/user level

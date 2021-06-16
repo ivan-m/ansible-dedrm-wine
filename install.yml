@@ -11,7 +11,7 @@
     WINEPREFIX: "{{ wine_prefix }}"
     WINEARCH: "win{{ wine_architecture }}"
     # Suppress some warnings
-    WINEDEBUG: -msvcrt
+    WINEDEBUG: -msvcrt,fixme-all
 
   pre_tasks:
     - name: Ensure download directory exists
