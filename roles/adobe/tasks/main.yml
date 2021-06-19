@@ -1,5 +1,36 @@
 ---
 
+# Even though Adobe seems to use .NET 3.5, if there's a corrupted .NET
+# 2.0 install then it seems to die (because 3.5 runs on top of 2.0).
+#
+# There are various posts verifying that this is a known bug, e.g.:
+#
+# * https://hydrogenaud.io/index.php?topic=57392.2525
+#
+# * https://social.msdn.microsoft.com/Forums/vstudio/en-US/978b6188-75d2-421a-bf3b-5e7236fb0a4b/machineconfig-error-with-systemservicemodel-please-help?forum=wcf
+#
+# However, the stated solutions about running a command seem to all
+# fail in Wine; it is unknown if this is due to Wine or the fix not
+# being reliable.
+#
+# However, this approach - whilst heavy handed (even a plain
+# dotnet35sp1 install seems to have this section present) - seems to
+# fix it.
+- name: Ensure .NET 2.0 install isn't corrupted
+  xml:
+    path: "{{ dotNET_2_machine_config }}"
+    xpath: "/configuration/system.serviceModel"
+    state: absent
+    backup: yes
+  register: fix_dotNET_2
+
+- debug:
+    msg: >-
+      If any errors occur running Adobe, try replacing
+      {{ dotNET_2_machine_config }} with its backup
+      {{ fix_dotNET_2.backup_file }}.
+  when: fix_dotNET_2.changed
+
 - name: Check if Adobe is already installed
   stat:
     path: "{{ adobe_path }}"

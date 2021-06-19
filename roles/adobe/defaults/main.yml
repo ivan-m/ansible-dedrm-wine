@@ -7,3 +7,10 @@ adobe_keyfile: "{{ dedrm_unpack_dir }}/adobekey.der"
 
 # Unfortunately this is hardcoded for the version number.
 adobe_path: "{{ wine_prefix }}/drive_c/Program Files/Adobe/Adobe Digital Editions 2.0/DigitalEditions.exe"
+
+# This file seems to get corrupted if psdkwin71 (required for Kindle
+# certificate installation) is also installed.
+#
+# This file seems to be present even with just dotnet35sp1 installed,
+# so it should be safe to rely upon its existence.
+dotNET_2_machine_config: "{{ wine_prefix}}/drive_c/windows/Microsoft.NET/Framework/v2.0.50727/CONFIG/machine.config"

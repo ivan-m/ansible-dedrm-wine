@@ -1,0 +1,13 @@
+---
+
+# Ansible seems to get confused if you try to invoke a role multiple
+# times with an optional variable (as instead of default back to the
+# default it copies that value to every other use of this role).  As
+# such, we use the hacky convention of having a dictionary with the
+# keys being the package_name to specify it.
+
+# Optional message to specify to let users know about what to install.
+package_msg: {}
+
+# Force re-installation
+reinstall: {}

@@ -7,3 +7,15 @@ dependencies:
   - role: winetricks
     vars:
       package_name: "kindle"
+  - role: winetricks
+    vars:
+      package_name: "psdkwin71"
+      package_msg:
+        psdkwin71: "Only the 'Windows Native Code Development' > 'Tools' Installation Option is required."
+    environment:
+      # Disables menu entries and mimeconfig; Python is only used
+      # internally and doesn't need to be accessed from outside.
+      #
+      # https://wiki.winehq.org/FAQ#How_can_I_prevent_Wine_from_changing_the_filetype_associations_on_my_system_or_adding_unwanted_menu_entries.2Fdesktop_links.3F
+      WINEDLLOVERRIDES: winemenubuilder.exe=d
+    when: install_kindle_certificate

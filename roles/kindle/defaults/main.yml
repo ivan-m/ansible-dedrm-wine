@@ -5,3 +5,9 @@ kindle_keyfile: "{{ dedrm_unpack_dir }}/kindlekey.k4i"
 kindle_path: "{{ wine_prefix }}/drive_c/Program Files/Amazon/Kindle/Kindle.exe"
 # Used to extract the key
 kindle_data_dir: "{{ wine_prefix }}/drive_c/users/{{ ansible_env.USER }}/Local\ Settings/Application\ Data/Amazon/Kindle/storage/"
+
+# Install/uninstall the security certificate
+certMgr_path: "{{ wine_prefix }}/drive_c/Program Files/Microsoft SDKs/Windows/v7.1/Bin/CertMgr.Exe"
+
+cert_name: "VeriSign Class 3 Public Primary Certification Authority - G5"
+cert_store: "ROOT" # Seems to work better than user store of "MY"

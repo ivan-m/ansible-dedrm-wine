@@ -8,6 +8,12 @@
     msg: "{{ package_name }} is already installed in {{ wine_prefix }}"
   when: package_is_installed | bool
 
+- debug:
+    msg: "{{ package_msg[package_name] }}"
+  when: >
+    (not package_is_installed | bool) and
+    (package_msg[package_name] is defined)
+
 - name: "Installing {{ package_name }}"
   command:
     winetricks --unattended --force {{ package_name }}

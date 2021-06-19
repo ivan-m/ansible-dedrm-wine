@@ -19,6 +19,24 @@ download_dir: "{{ wine_prefix }}"
 
 install_kindle: true
 
+# You may have troubles with Kindle accessing the internet due to a
+# certificate not being trusted any more on some distributions and
+# being removed.
+#
+# This will install a local copy of the certificate in the wine
+# prefix.
+#
+# Note however that toggling this will _not_ uninstall the prefix: you
+# will need to either:
+#
+# 1) Use the uninstaller and start afresh
+#
+# 2) Run `WINEPREFIX={{ wine_prefix }} wine control`, go to Internet
+#    Settings, Content, Certificates, Trusted Root Certification
+#    Authorities, choose "VeriSign Class 3 Public Primary
+#    Certification Authority - G5" then Remove.
+install_kindle_certificate: true
+
 # DeDRM reports that 1.7 is no longer supported; as such, this will
 # use 2.0 (as newer versions aren't as compatible).
 install_adobe: true

@@ -1,5 +1,47 @@
 ---
 
+- name: Check if Kindle certificate has been installed
+  command:
+    cmd: wine '{{ certMgr_path }}' -s '{{ cert_store }}'
+  environment:
+    # Causes issues with certificate store checking.
+    #
+    # Not set globally as it prevents downloading.
+    NIX_SSL_CERT_FILE: None
+    SSL_CERT_FILE: None
+  register: cert_store_contents
+  changed_when: false
+  failed_when: >
+    (cert_store_contents.rc != 0) or
+    ('CertMgr Succeeded' not in cert_store_contents.stdout)
+  when: install_kindle_certificate
+  # TODO: should this only apply if the keyfile isn't present?
+
+- set_fact:
+    kindle_certificate_installed: "{{ cert_store_contents.stdout is defined and cert_name in cert_store_contents.stdout }}"
+  when: install_kindle_certificate
+
+- name: Install required certificate for Kindle
+  command:
+    cmd: wine '{{ certMgr_path }}' -add -c "etc/{{ cert_name }}.pem" -s '{{ cert_store }}'
+  environment:
+    # Causes issues with certificate store checking.
+    #
+    # Not set globally as it prevents downloading.
+    NIX_SSL_CERT_FILE: None
+    SSL_CERT_FILE: None
+  register: add_cert_result
+  failed_when: >
+    (add_cert_result.rc != 0) or
+    ('CertMgr Succeeded' not in add_cert_result.stdout)
+  # Unfortunately, it isn't possible to tell - without checking the
+  # certificate store again - if it _actually_ succeeded: if the path
+  # to the certificate was invalid, instead it will create an empty
+  # file and try to add that in :(
+  when: >
+    install_kindle_certificate and
+    (not kindle_certificate_installed | bool)
+
 - name: Check if keyfile already exists
   stat:
     path: "{{ kindle_keyfile }}"
