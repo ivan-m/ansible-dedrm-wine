@@ -12,7 +12,4 @@ dependencies:
       package_name: "corefonts"
   - role: winetricks
     vars:
-      package_name: "windowscodecs"
-  - role: winetricks
-    vars:
       package_name: "dotnet35sp1"
