@@ -97,7 +97,9 @@
     chdir: "{{ wine_prefix }}"
     creates: "{{ adobe_keyfile }}"
   environment:
-    PYTHONPATH: ""
+    # Make sure that Linux PYTHONPATH doesn't go in; this can cause
+    # issues due to maximum path length being exceeded in wine Python.
+    PYTHONPATH: None
   register: create_key
   failed_when: false
   when: not have_keyfile | bool

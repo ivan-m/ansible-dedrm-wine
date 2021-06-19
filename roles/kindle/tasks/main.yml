@@ -51,7 +51,9 @@
     chdir: "{{ wine_prefix }}"
     creates: "{{ kindle_keyfile }}"
   environment:
-    PYTHONPATH: ""
+    # Make sure that Linux PYTHONPATH doesn't go in; this can cause
+    # issues due to maximum path length being exceeded in wine Python.
+    PYTHONPATH: None
   register: create_key
   when: not have_keyfile | bool
 
