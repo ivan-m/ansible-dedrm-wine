@@ -11,7 +11,7 @@
   environment:
     # Make sure that Linux PYTHONPATH doesn't go in; this can cause
     # issues due to maximum path length being exceeded in wine Python.
-    PYTHONPATH: ""
+    PYTHONPATH: None
   register: python_test
   changed_when: false
   failed_when: python_test_string not in python_test.stdout
