@@ -28,8 +28,10 @@ This Ansible playbook will automate:
 ### Dependencies
 
 The canonical list of Windows dependencies as required for NixOS 20.09
-can be found in [shell.nix].  Package names for other Linux
+can be found in [shell.nix][].  Package names for other Linux
 distributions will vary.
+
+[shell.nix]: shell.nix
 
 In particular, you will need to use a version of Calibre using
 Python-2 (so before version 5).
@@ -102,7 +104,7 @@ installed at the top-level.  This was tested with Nixpkgs version
 
 Note that as of 20.09, the `calibre` package uses Python 3; as such,
 be sure to use `calibre-py2` for both the the system/user level
-(however you have installed Calibre as a user) and in [shell.nix].
+(however you have installed Calibre as a user) and in [shell.nix][].
 
 Furthermore, for the plugin to run, it seems to need to have PyCrypto
 installed on the Linux side as well as within Wine.  However, PyCrypto
