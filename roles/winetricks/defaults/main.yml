@@ -8,6 +8,3 @@
 
 # Optional message to specify to let users know about what to install.
 package_msg: {}
-
-# Force re-installation
-reinstall: {}

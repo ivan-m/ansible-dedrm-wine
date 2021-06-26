@@ -1,12 +1,12 @@
 ---
 
 adobe_url: "http://download.adobe.com/pub/adobe/digitaleditions/ADE_2.0_Installer.exe"
-adobe_installer: "{{ download_dir }}/ADE_2.0_Installer.exe"
+# Unfortunately this is hardcoded for the version number.
+adobe_install_dir: "Program Files/Adobe/Adobe Digital Editions 2.0"
 
 adobe_keyfile: "{{ dedrm_unpack_dir }}/adobekey.der"
 
-# Unfortunately this is hardcoded for the version number.
-adobe_path: "{{ wine_prefix }}/drive_c/Program Files/Adobe/Adobe Digital Editions 2.0/DigitalEditions.exe"
+adobe_path: "{{ wine_prefix }}/drive_c/{{adobe_install_dir}}/DigitalEditions.exe"
 
 # This file seems to get corrupted if psdkwin71 (required for Kindle
 # certificate installation) is also installed.

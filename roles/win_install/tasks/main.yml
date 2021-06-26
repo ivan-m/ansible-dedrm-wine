@@ -30,10 +30,15 @@
   when: not have_installer | bool
 
 - debug:
-    msg: Please accept all defaults in the installer window that appears.
+    msg: "{{ pkg_message[pkg_name] | default('Please accept all defaults in the installer window that appears.') }}"
   when: not have_app | bool
 
-- name: "Installing {{ pkg_name }}"
+- name: "Running {{ pkg_name }} MSI"
   command:
     msiexec /i {{ pkg_installer_path }}
-  when: not have_app | bool
+  when: (not have_app | bool) and (pkg_installer_ext == "msi")
+
+- name: "Running {{ pkg_name }} installer EXE"
+  command:
+    wine {{ pkg_installer_path }}
+  when: (not have_app | bool) and (pkg_installer_ext == "exe")

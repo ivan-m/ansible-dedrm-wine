@@ -1,3 +1,0 @@
----
-
-pkg_installer_path: "{{ download_dir }}/{{ pkg_name}}-{{ pkg_version }}.msi"
