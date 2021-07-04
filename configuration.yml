@@ -1,13 +1,6 @@
 ---
 
-dedrm_version: "6.8.1"
-# Fix DeDRM plugin to avoid issues like this:
-#
-#        key = self._math.rsa_construct(*tup)
-#    TypeError: argument 2 must be long, not int
-#
-# when decrypting Adobe ePubs.
-dedrm_pycrypto_rsa_fix: true
+dedrm_version: "7.2.1"
 
 wine_prefix: "{{ ansible_env.HOME }}/.wine_dedrm"
 wine_architecture: "32" # 64 probably doesn't work

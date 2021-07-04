@@ -3,7 +3,7 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     ansible
     cacert # For winetricks
-    calibre-py2
+    calibre
     dos2unix
     samba # winbind / ntlm_auth
     wine

@@ -6,6 +6,6 @@ dedrm_url: "https://github.com/apprenticeharper/DeDRM_tools/releases/download/v{
 dedrm_download_file: "{{ download_dir }}/DeDRM_{{ dedrm_version }}.zip"
 dedrm_unpack_dir: "{{ wine_prefix }}/DeDRM_{{ dedrm_version }}"
 
-dedrm_plugin: "{{ dedrm_unpack_dir }}/DeDRM_Plugin.zip"
+dedrm_plugin: "{{ dedrm_unpack_dir }}/DeDRM_plugin.zip"
 dedrm_plugin_unpack_dir: "{{ dedrm_unpack_dir }}/plugin_contents"
 dedrm_fixed_plugin: "{{ dedrm_unpack_dir }}/DeDRM_Plugin_pythonpath.zip"

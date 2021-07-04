@@ -54,6 +54,7 @@
     patterns: '*'
   register: plugin_unpack_contents
 
+# This is used to run the extractor scripts for Kindle and Adobe.
 - name: Unpack DeDRM plugin
   unarchive:
     src: "{{ dedrm_plugin }}"
@@ -61,24 +62,8 @@
     remote_src: yes
   when: plugin_unpack_contents.matched == 0
 
-- name: Tweak plugin to fix PyCrypto RSA call
-  replace:
-    path: "{{ dedrm_plugin_unpack_dir }}/ineptepub.py"
-    after: 'def bytesToNumber\(self, bytes\):'
-    before: 'def decrypt\(self, data\):'
-    regexp: 'return total'
-    replace: 'return long(total)'
-  when: dedrm_pycrypto_rsa_fix
-
-- name: Re-pack tweaked plugin
-  archive:
-    path: "{{ dedrm_plugin_unpack_dir }}/*"
-    dest: "{{ dedrm_fixed_plugin }}"
-    format: zip
-  when: dedrm_pycrypto_rsa_fix
-
 - name: Install plugin into Calibre
   command:
-    calibre-customize --add-plugin={{ dedrm_fixed_plugin if dedrm_pycrypto_rsa_fix else dedrm_plugin }}
+    calibre-customize --add-plugin={{ dedrm_plugin }}
   args:
     creates: "{{ installed_plugin }}"
