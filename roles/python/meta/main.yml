@@ -6,13 +6,9 @@ dependencies:
       pkg_name: Python
       pkg_version: "{{ python_version }}"
       pkg_installed_into_dir: "{{ python_install_dir }}"
-      pkg_installer_url: "https://www.python.org/ftp/python/{{ python_version }}/python-{{ python_version }}.msi"
-      pkg_installer_ext: "msi"
-
-  - role: win_install
-    vars:
-      pkg_name: PyCrypto
-      pkg_version: "{{ pycrypto_version }}"
-      pkg_installed_into_dir: "{{ pycrypto_install_dir }}"
-      pkg_installer_url: "http://www.voidspace.org.uk/python/pycrypto-{{ pycrypto_version }}/pycrypto-{{ pycrypto_version }}.win{{ wine_architecture }}-py{{ python_major_version }}.msi"
-      pkg_installer_ext: "msi"
+      pkg_installer_url: "https://www.python.org/ftp/python/{{ python_version }}/python-{{ python_version }}.exe"
+      pkg_installer_ext: "exe"
+      pkg_opts:
+        Python: "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0"
+      pkg_message:
+        Python: "Python-{{ python_version }} will install silently."

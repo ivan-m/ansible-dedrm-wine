@@ -42,8 +42,7 @@ install_kindle_certificate: true
 install_adobe: true
 
 # Probably don't want to change these.
-python_version: "2.7.13"
-pycrypto_version: "2.6.1"
+python_version: "3.8.10" # Latest available 32bit that supports Win7
 
 # These probably shouldn't be customised; they're defined here for
 # remove-plugin.yml and internal definitions.

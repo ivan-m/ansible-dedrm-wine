@@ -35,10 +35,10 @@
 
 - name: "Running {{ pkg_name }} MSI"
   command:
-    msiexec /i {{ pkg_installer_path }}
+    msiexec /i {{ pkg_installer_path }} {{ pkg_opts[pkg_name] | default('') }}
   when: (not have_app | bool) and (pkg_installer_ext == "msi")
 
 - name: "Running {{ pkg_name }} installer EXE"
   command:
-    wine {{ pkg_installer_path }}
+    wine {{ pkg_installer_path }} {{ pkg_opts[pkg_name] | default('') }}
   when: (not have_app | bool) and (pkg_installer_ext == "exe")

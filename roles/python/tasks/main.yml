@@ -15,3 +15,16 @@
   register: python_test
   changed_when: false
   failed_when: python_test_string not in python_test.stdout
+
+- name: Installing Python cryptography libraries
+  command:
+    wine pip install pycryptodome
+  register: crypto_install_out
+  changed_when: "'Requirement already satisfied' not in crypto_install_out.stdout"
+  failed_when: >
+    (crypto_install_out.rc != 0) or
+    (('Successfully installed' not in crypto_install_out.stdout) and
+     ('Requirement already satisfied' not in crypto_install_out.stdout))
+
+# We don't run the crypto tests as they take a while.  Maybe add it as
+# an option if desired/required.

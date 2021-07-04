@@ -5,11 +5,9 @@ python_major_version: "{{ python_version | regex_replace('^(.\\.[^\\.]+).*$', '\
 
 # e.g. 2.7 => 27
 python_simple_version: "{{ python_major_version | regex_replace('\\.', '') }}"
-pycrypto_simple_version: "{{ pycrypto_version | regex_replace('\\.', '') }}"
 
 # These assume that the defaults aren't changed in the two installers.
-python_exe: "C:\\Python{{ python_simple_version }}\\python.exe"
-python_install_dir: "Python{{ python_simple_version }}/"
-pycrypto_install_dir: "Lib/site-packages/pycrypto-{{ pycrypto_version }}-py{{ python_major_version }}.egg-info/"
+python_exe: "C:\\Program Files\\Python{{ python_simple_version }}-{{ wine_architecture }}\\python.exe"
+python_install_dir: "Program Files/Python{{ python_simple_version }}-{{ wine_architecture }}/"
 
 python_test_string: "Python in wine works!"
