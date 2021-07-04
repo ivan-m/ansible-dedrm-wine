@@ -39,6 +39,7 @@
 - set_fact:
     have_keyfile: "{{ keyfile_check.stat.isreg is defined and keyfile_check.stat.isreg }}"
 
+# Note: we are setting this for both cases, hence this definition.
 - set_fact:
     adobe_has_been_run: true
   when: have_keyfile | bool
