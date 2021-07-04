@@ -5,10 +5,14 @@ dedrm_version: "7.2.1"
 wine_prefix: "{{ ansible_env.HOME }}/.wine_dedrm"
 wine_architecture: "32" # 64 probably doesn't work
 
-# Change this if you are doing lots of runs and want to avoid
-# re-downloading every time.
-download_dir: "{{ wine_prefix }}"
-# download_dir: "{{ ansible_env.HOME }}/.wine_dedrm_installers"
+# This assumes that you may be changing configurations often
+# (e.g. upgrading DeDRM version) semi-often and thus don't want to
+# keep downloading installers (as otherwise uninstalling will delete
+# the installers).
+#
+# Change this if you prefer a cleaner experience.
+download_dir: "{{ ansible_env.HOME }}/.wine_dedrm_installers"
+# download_dir: "{{ wine_prefix }}"
 
 install_kindle: true
 
