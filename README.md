@@ -16,6 +16,12 @@ uninstall the Calibre plugin configuration first).
 
 See below for more details.
 
+## Python 2 support
+
+If you are still using an older version of Calibre that runs on
+Python-2, please use this [older
+version](https://github.com/ivan-m/ansible-dedrm-wine/tree/Python-2).
+
 ## Why write this?
 
 I kept having issues migrating over my Calibre +
